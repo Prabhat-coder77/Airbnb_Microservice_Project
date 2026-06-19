@@ -1,0 +1,65 @@
+#server:
+#  port: 5555
+#
+#spring:
+#  application:
+#    name: api-gateway-1
+#
+#  cloud:
+#    gateway:
+#      routes:
+#
+#        # Route for auth-service
+#        - id: authservice-api-1
+#          uri: lb://AUTH-SERVICE
+#          predicates:
+#            - Path=/auth/**
+#          filters:
+#            - RewritePath=/auth/(?<segment>.*), /${segment}
+#
+#        # Route for property-service
+#        - id: propertyservice-api
+#          uri: lb://PROPERTY-MICROSERVICE-3
+#          predicates:
+#            - Path=/property/**
+#          filters:
+#            - RewritePath=/property/(?<segment>.*), /${segment}
+server:
+  port: 5555
+
+spring:
+  application:
+    name: api-gateway-1
+
+  cloud:
+    gateway:
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins:
+              - "http://localhost:5173"
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowed-headers: "*"
+            allow-credentials: true
+
+      routes:
+
+        - id: authservice-api-1
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /${segment}
+
+        - id: propertyservice-api
+          uri: lb://PROPERTY-MICROSERVICE-3
+          predicates:
+            - Path=/property/**
+          filters:
+            - RewritePath=/property/(?<segment>.*), /${segment}
